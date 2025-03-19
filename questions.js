@@ -77,9 +77,26 @@ function doubleDivisibleByThree(numbers) {
  * @return {Object[]} An array of objects containing the name and email of qualifying students, sorted by name.
  */
 function selectHighPerformingStudents(students) {
-  // Your implementation here
-  return [];
+  return students
+    .filter(student => {
+      if (student.GPA >= 5 && student.hobbies.includes("coding")) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .map(student => ({ name: student.name, email: student.email }))
+    .sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      } else if (a.name > b.name) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 }
+
 
 /**
  * Exercise 4: Aggregating Student Data with `reduce()`
@@ -106,9 +123,41 @@ function selectHighPerformingStudents(students) {
  * @return {Object} An object containing aggregated student data.
  */
 function aggregateStudentData(students) {
-  // Your implementation here
-  return {};
+  let totalStudents = 0;
+  let gpaSum = 0;
+
+  for (let i = 0; i < students.length; i++) {
+    totalStudents += 1;
+    gpaSum += students[i].GPA;
+  }
+
+  let codingCount = 0;
+  let codingGPASum = 0;
+
+  for (let i = 0; i < students.length; i++) {
+    if (students[i].hobbies.includes("coding")) {
+      codingCount += 1;
+      codingGPASum += students[i].GPA;
+    }
+  }
+
+  const studentAvgGPA = Math.round((gpaSum / totalStudents) * 100) / 100;
+  let codingStudentGPA;
+  if (codingCount > 0) {
+    codingStudentGPA = Math.round((codingGPASum / codingCount) * 100) / 100;
+  } else {
+    codingStudentGPA = 0;
+  }
+
+  return {
+    studentNum: totalStudents,
+    studentAvgGPA: studentAvgGPA,
+    codingStudentNum: codingCount,
+    codingStudentGPA: codingStudentGPA
+  };
 }
+
+
 
 /**
  * Exercise 5: Swapping Between Sentence and CamelCase Forms
@@ -130,8 +179,26 @@ function aggregateStudentData(students) {
  * @return {string} The converted string, either in camelCase or sentence form.
  */
 function swapForm(input) {
-  // Your implementation here
-  return input;
+  if (input.includes(" ")) {
+      const words = input.split(" ");
+      return words.reduce((result, w, inx) => {
+          if (index === 0) {
+              return w;
+          }
+          return result + w.charAt(0).toUpperCase() + w.slice(1);
+      }, "");
+  } else {
+      let result = input[0];
+      for (let i = 1; i < input.length; i++) {
+          const letter = input[i];
+          if (letter >= "A" && letter <= "Z") {
+              result += " " + letter.toLowerCase();
+          } else {
+              result += letter;
+          }
+      }
+      return result;
+  }
 }
 
 // Export the function for testing with Jest
